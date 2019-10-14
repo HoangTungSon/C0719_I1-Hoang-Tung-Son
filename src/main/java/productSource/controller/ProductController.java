@@ -71,7 +71,7 @@ public class ProductController {
             return modelAndView;
 
         }else {
-            ModelAndView modelAndView = new ModelAndView("/error.404");
+            ModelAndView modelAndView = new ModelAndView("/error404");
             return modelAndView;
         }
     }
