@@ -2,15 +2,17 @@ package productSource.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import productSource.model.Product;
 import productSource.model.ProductCategory;
 import productSource.service.CategoryService;
 import productSource.service.ProductService;
+
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Controller
 public class ProductController {
@@ -27,8 +29,13 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ModelAndView listProduct(){
-        Iterable<Product> products = productService.findAll();
+    public ModelAndView listProduct(@RequestParam("s") Optional<String> s){
+        Iterable<Product> products;
+        if(s.isPresent()){
+            products = productService.findAllByName(s.get());
+        } else {
+            products = productService.findAll();
+        }
         ModelAndView modelAndView = new ModelAndView("/product/listProduct");
         modelAndView.addObject("products", products);
         return modelAndView;
@@ -42,11 +49,16 @@ public class ProductController {
     }
 
     @PostMapping("/create-product")
-    public ModelAndView saveProduct(@ModelAttribute("product") Product product){
-        productService.save(product);
+    public ModelAndView saveProduct(@Validated @ModelAttribute("product") Product product, BindingResult bindingResult){
         ModelAndView modelAndView = new ModelAndView("/product/createProduct");
         modelAndView.addObject("product", new Product());
-        modelAndView.addObject("message", "New product created successfully");
+        if(bindingResult.hasErrors()){
+            modelAndView.addObject("message", "New product is fail to created");
+        } else {
+            product.setDateCreate(LocalDate.now().toString());
+            productService.save(product);
+            modelAndView.addObject("message", "New product created successfully");
+        }
         return modelAndView;
     }
 
@@ -65,11 +77,17 @@ public class ProductController {
     }
 
     @PostMapping("/edit-product")
-    public ModelAndView updateProduct(@ModelAttribute("product") Product product){
-        productService.save(product);
+    public ModelAndView updateProduct(@Validated @ModelAttribute("product") Product product, BindingResult bindingResult){
+
         ModelAndView modelAndView = new ModelAndView("/product/editProduct");
         modelAndView.addObject("product", product);
-        modelAndView.addObject("message", "Product updated successfully");
+
+        if(bindingResult.hasErrors()){
+            modelAndView.addObject("message", "Product is fail to updated ");
+        } else {
+            productService.save(product);
+            modelAndView.addObject("message", "Product updated successfully");
+        }
         return modelAndView;
     }
 

@@ -5,28 +5,31 @@
     <title>Title</title>
 </head>
 <body>
-<a href="/create-product">Create new product</a>
 <h1>Products</h1>
-<!--<form>-->
-<!--    Search by product name:-->
-<!--    <input name="s" type="text"/>-->
-<!--    <input type="submit" value="Search"/>-->
-<!--</form><br/>-->
+<form>
+    Search by product name:
+    <input name="s" type="text"/>
+    <input type="submit" value="Search"/>
+</form>
+<br/>
+<div>
+    <a href="/create-product">Create new product</a>
+</div>
+
 <table border="1">
     <tr>
         <th>#</th>
         <th>Name</th>
         <th>Category</th>
-        <th>Edit</th>
-        <th>Delete</th>
+        <th></th>
     </tr>
-    <th:block th:each="product : ${products}">
+    <th:block th:each="product, iStat: ${products}">
         <tr>
-            <td></td>
+            <td th:text="${iStat.count}"></td>
             <td th:text="${product.name}"></td>
             <td th:text="${product.productCategory.name}"></td>
-            <td><a th:href="@{/edit-product/__${product.id}__ }">Edit</a></td>
-            <td><a th:href="@{/delete-product/__${product.id}__ }">Delete</a></td>
+            <td><a th:href="@{/edit-product/__${product.id}__ }">Edit</a> || <a
+                    th:href="@{/delete-product/__${product.id}__ }">Delete</a></td>
         </tr>
     </th:block>
 </table>

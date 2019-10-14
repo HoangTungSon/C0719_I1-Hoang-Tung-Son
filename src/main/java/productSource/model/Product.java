@@ -1,6 +1,9 @@
 package productSource.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "products")
@@ -10,10 +13,18 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Size(min = 2, max = 20)
     private String name;
+
+    @Positive
     private Double price;
+
+    @Positive
     private Integer quantity;
+
     private String dateCreate;
+
+    @Size(min = 10)
     private String description;
 
     @ManyToOne
