@@ -1,4 +1,5 @@
 package productSource;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -22,7 +23,9 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import productSource.service.CategoryService;
 import productSource.service.ProductService;
+import productSource.service.impl.CategoryServiceImpl;
 import productSource.service.impl.ProductServiceImpl;
 
 import javax.persistence.EntityManager;
@@ -46,8 +49,13 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter implements Applic
     }
 
     @Bean
-    public ProductService productService(){
+    public ProductService productService() {
         return new ProductServiceImpl();
+    }
+
+    @Bean
+    public CategoryService categoryService() {
+        return new CategoryServiceImpl();
     }
 
     //Thymeleaf Configuration
